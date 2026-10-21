@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { fileURLToPath } from 'node:url';
+import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import vue from '@astrojs/vue';
 import svelte from '@astrojs/svelte';
@@ -29,7 +30,7 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 4321,
   },
-  integrations: [react(), vue(), svelte()],
+  integrations: [mdx(), react(), vue(), svelte()],
   vite: {
     plugins: [islandResolve()],
     resolve: {

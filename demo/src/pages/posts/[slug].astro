@@ -1,20 +1,24 @@
 ---
+import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { findNote, notes } from '../../data/notes.js';
 
-export function getStaticPaths() {
-  return notes.map((note) => ({ params: { slug: note.slug } }));
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
 }
 
-const note = findNote(Astro.params.slug);
-if (!note) {
-  throw new Error('getStaticPaths에 없는 글입니다.');
-}
+const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 
-<Base title={`${note.title} — Astro 실습`}>
+<Base title={`${post.data.title} — Astro 실습`}>
   <p><a href="/posts">목록</a></p>
-  <h1>{note.title}</h1>
-  <p>{note.summary}</p>
-  <p>이 주소의 동적 값은 <code>{Astro.params.slug}</code>입니다.</p>
+  <h1>{post.data.title}</h1>
+  <p class="lede">{post.data.description}</p>
+  <article class="post-body">
+    <Content />
+  </article>
 </Base>
