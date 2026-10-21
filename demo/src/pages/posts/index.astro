@@ -1,11 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
+import { listPosts } from '../../lib/posts.js';
 
-const posts = (await getCollection('posts')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = await listPosts();
 ---
 
 <Base title="글 — Astro 실습">
@@ -13,9 +11,9 @@ const posts = (await getCollection('posts')).sort(
   <p class="lede">목록은 <code>src/content/posts</code> 콘텐츠 컬렉션입니다. Markdown 두 편과 MDX 한 편입니다.</p>
   {
     posts.map((post) => (
-      <Card title={post.data.title} href={`/posts/${post.id}`}>
-        <Fragment slot="meta">{post.data.pubDate.toISOString().slice(0, 10)}</Fragment>
-        <p>{post.data.description}</p>
+      <Card title={post.title} href={`/posts/${post.id}`}>
+        <Fragment slot="meta">{post.pubDate}</Fragment>
+        <p>{post.description}</p>
       </Card>
     ))
   }

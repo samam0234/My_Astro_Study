@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { listPosts } from '../lib/posts.js';
+
+const posts = await listPosts();
+---
+
+<Base title="피드 — Astro 실습">
+  <h1>엔드포인트와 같은 목록</h1>
+  <p class="lede">
+    <code>GET /api/posts.json</code>이 내려 주는 배열을 이 페이지도 그대로 찍습니다.
+    둘 다 <code>listPosts()</code>를 부릅니다. 빌드 때 JSON 파일로 구워 집니다.
+  </p>
+  <ul class="note-list">
+    {
+      posts.map((post) => (
+        <li>
+          <a href={`/posts/${post.id}`}>{post.title}</a>
+          <p>
+            {post.pubDate} · {post.description}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</Base>
