@@ -1,0 +1,117 @@
+:root {
+  color-scheme: light;
+  --ink: #2a2118;
+  --muted: #6b5e51;
+  --line: #e6d9c8;
+  --paper: #f6f1e8;
+  --accent: #9a3412;
+  font-family: "Segoe UI", "Noto Sans KR", sans-serif;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #f6f1e8;
+  --muted: #d6c4b0;
+  --line: #4a3b2e;
+  --paper: #241c16;
+  --accent: #fdba74;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.65;
+}
+
+a {
+  color: var(--accent);
+}
+
+.wrap {
+  width: min(760px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.top nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.top a[aria-current='page'] {
+  font-weight: 700;
+}
+
+main {
+  padding: 2.5rem 0 4rem;
+}
+
+h1 {
+  font-size: 2.1rem;
+  line-height: 1.25;
+  margin-bottom: 0.4rem;
+}
+
+.lede,
+.meta {
+  color: var(--muted);
+}
+
+.memo-list {
+  padding: 0;
+  list-style: none;
+}
+
+.memo-list li {
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.memo-list p,
+.memo-body p {
+  margin: 0.3rem 0 0;
+}
+
+.search input,
+.pin,
+.theme {
+  font: inherit;
+}
+
+.search input {
+  width: min(100%, 24rem);
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: inherit;
+}
+
+.pin,
+.theme {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.foot {
+  padding: 1rem 0 2rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}

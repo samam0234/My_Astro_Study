@@ -1,0 +1,22 @@
+---
+export const prerender = false;
+
+import Shell from '../ui/Shell.astro';
+
+let visits = 0;
+const current = Astro.cookies.get('memo_visits')?.number();
+if (typeof current === 'number' && !Number.isNaN(current)) visits = current;
+visits += 1;
+
+Astro.cookies.set('memo_visits', String(visits), {
+  path: '/',
+  httpOnly: true,
+  sameSite: 'lax',
+});
+---
+
+<Shell title="다시 방문 — 메모 데스크">
+  <h1>다시 온 횟수</h1>
+  <p class="lede">이 페이지만 요청마다 만듭니다. 메모 본문은 정적 파일입니다.</p>
+  <p>이 브라우저 기준 <strong>{visits}</strong>번째 방문입니다.</p>
+</Shell>

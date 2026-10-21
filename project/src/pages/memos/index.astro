@@ -1,0 +1,13 @@
+---
+import Shell from '../../ui/Shell.astro';
+import MemoSearch from 'island-react/MemoSearch.jsx';
+import { listMemos } from '../../lib/memos.js';
+
+const memos = await listMemos();
+---
+
+<Shell title="메모 — 메모 데스크">
+  <h1>메모</h1>
+  <p class="lede">검색 칸만 React입니다. 비어 있으면 세 편이 모두 보입니다.</p>
+  <MemoSearch client:load memos={memos} />
+</Shell>

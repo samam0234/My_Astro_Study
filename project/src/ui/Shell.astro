@@ -1,0 +1,46 @@
+---
+import '../styles/site.css';
+import ThemeToggle from 'island-svelte/ThemeToggle.svelte';
+
+const siteName = import.meta.env.PUBLIC_SITE_NAME || '메모 데스크';
+const { title = siteName, description = '짧은 학습 메모를 모아 둔 정적 사이트입니다.' } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const links = [
+  { href: '/', label: '홈' },
+  { href: '/memos', label: '메모' },
+  { href: '/about', label: '소개' },
+  { href: '/visit', label: '다시 방문' },
+];
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="wrap top">
+      <a href="/">{siteName}</a>
+      <nav>
+        {
+          links.map((link) => (
+            <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>
+              {link.label}
+            </a>
+          ))
+        }
+        <ThemeToggle client:load />
+      </nav>
+    </header>
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer class="wrap foot">
+      <p>메모는 빌드 때 HTML이 됩니다. 테마 버튼만 Svelte 섬입니다.</p>
+    </footer>
+  </body>
+</html>

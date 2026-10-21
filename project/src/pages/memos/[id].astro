@@ -1,0 +1,26 @@
+---
+import { getCollection, render } from 'astro:content';
+import Shell from '../../ui/Shell.astro';
+import PinButton from 'island-vue/PinButton.vue';
+
+export async function getStaticPaths() {
+  const memos = await getCollection('memos');
+  return memos.map((memo) => ({
+    params: { id: memo.id },
+    props: { memo },
+  }));
+}
+
+const { memo } = Astro.props;
+const { Content } = await render(memo);
+---
+
+<Shell title={`${memo.data.title} — 메모 데스크`} description={memo.data.summary}>
+  <p><a href="/memos">목록</a></p>
+  <h1>{memo.data.title}</h1>
+  <p class="meta">약 {memo.data.minutes}분 · {memo.data.summary}</p>
+  <p><PinButton client:load /></p>
+  <article class="memo-body">
+    <Content />
+  </article>
+</Shell>

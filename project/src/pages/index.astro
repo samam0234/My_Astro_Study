@@ -1,0 +1,14 @@
+---
+import Shell from '../ui/Shell.astro';
+import { listMemos } from '../lib/memos.js';
+
+const memos = await listMemos();
+const minutes = memos.reduce((sum, memo) => sum + memo.minutes, 0);
+---
+
+<Shell title="메모 데스크" description="정적 랜딩과 메모 목록으로 된 작은 사이트입니다.">
+  <h1>오늘 남긴 것만 읽습니다</h1>
+  <p class="lede">demo의 실습 화면과 주소가 다릅니다. 여기는 메모 세 편과 검색, 고정, 테마, 방문 횟수만 있습니다.</p>
+  <p>메모 {memos.length}편, 읽는 데 약 {minutes}분.</p>
+  <p><a href="/memos">메모 목록</a></p>
+</Shell>
