@@ -76,3 +76,36 @@ code {
   margin: 0.25rem 0 0;
   color: var(--muted);
 }
+
+.site-header a[aria-current='page'] {
+  font-weight: 700;
+}
+
+.card {
+  margin: 1rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.card-meta {
+  margin: 0.25rem 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.card-body p {
+  margin: 0.25rem 0 0;
+}
+
+.site-footer {
+  width: min(720px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1rem 0 2rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}

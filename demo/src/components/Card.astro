@@ -1,0 +1,9 @@
+---
+const { title, href } = Astro.props;
+---
+
+<article class="card">
+  <h2>{href ? <a href={href}>{title}</a> : title}</h2>
+  <p class="card-meta"><slot name="meta" /></p>
+  <div class="card-body"><slot /></div>
+</article>

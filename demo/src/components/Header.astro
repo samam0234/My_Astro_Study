@@ -1,0 +1,22 @@
+---
+const links = [
+  { href: '/', label: '홈' },
+  { href: '/about', label: '소개' },
+  { href: '/posts', label: '글' },
+  { href: '/components', label: '부품' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="site-header">
+  <a href="/">Astro 실습</a>
+  <nav>
+    {
+      links.map((link) => (
+        <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+</header>

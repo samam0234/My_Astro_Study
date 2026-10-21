@@ -1,19 +1,18 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
 import { notes } from '../../data/notes.js';
 ---
 
 <Base title="글 — Astro 실습">
   <h1>글</h1>
-  <p class="lede">폴더 <code>posts/index.astro</code>가 <code>/posts</code>입니다. 목록은 아직 코드 안의 배열입니다.</p>
-  <ul class="note-list">
-    {
-      notes.map((note) => (
-        <li>
-          <a href={`/posts/${note.slug}`}>{note.title}</a>
-          <p>{note.summary}</p>
-        </li>
-      ))
-    }
-  </ul>
+  <p class="lede">폴더 <code>posts/index.astro</code>가 <code>/posts</code>입니다. 카드는 <code>Card.astro</code>입니다.</p>
+  {
+    notes.map((note) => (
+      <Card title={note.title} href={`/posts/${note.slug}`}>
+        <Fragment slot="meta">임시 데이터</Fragment>
+        <p>{note.summary}</p>
+      </Card>
+    ))
+  }
 </Base>
