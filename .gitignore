@@ -1,0 +1,30 @@
+# dependencies
+**/node_modules/
+
+# astro
+**/.astro/
+**/dist/
+
+# env
+**/.env
+**/.env.*
+!**/.env.example
+
+# runtime data
+**/data/guestbook.json
+
+# logs
+**/npm-debug.log*
+**/*.log
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# nested git from scaffolding tools
+**/.git
+!**/.gitignore
