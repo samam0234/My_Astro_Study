@@ -1,0 +1,25 @@
+---
+export const prerender = false;
+
+import Base from '../layouts/Base.astro';
+
+let visits = 0;
+const current = Astro.cookies.get('visits')?.number();
+if (typeof current === 'number' && !Number.isNaN(current)) visits = current;
+visits += 1;
+
+Astro.cookies.set('visits', String(visits), {
+  path: '/',
+  httpOnly: true,
+  sameSite: 'lax',
+});
+
+const renderedAt = new Date().toISOString();
+---
+
+<Base title="지금 — Astro 실습">
+  <h1>요청마다 다른 HTML</h1>
+  <p class="lede">이 주소만 쿠키를 읽고 씁니다. 홈과 글은 빌드된 파일 그대로입니다.</p>
+  <p>이 브라우저의 방문 횟수: <strong>{visits}</strong></p>
+  <p>이 응답을 만든 시각: <code>{renderedAt}</code></p>
+</Base>

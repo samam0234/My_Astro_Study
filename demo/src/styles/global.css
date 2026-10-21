@@ -39,7 +39,8 @@ main {
 
 .site-header nav {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
 }
 
 main {
