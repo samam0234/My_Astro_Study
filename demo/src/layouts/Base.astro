@@ -14,6 +14,14 @@ const { title = 'Astro 실습' } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
+    <header class="site-header">
+      <a href="/">Astro 실습</a>
+      <nav>
+        <a href="/">홈</a>
+        <a href="/about">소개</a>
+        <a href="/posts">글</a>
+      </nav>
+    </header>
     <main>
       <slot />
     </main>

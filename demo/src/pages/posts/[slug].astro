@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import { findNote, notes } from '../../data/notes.js';
+
+export function getStaticPaths() {
+  return notes.map((note) => ({ params: { slug: note.slug } }));
+}
+
+const note = findNote(Astro.params.slug);
+if (!note) {
+  throw new Error('getStaticPaths에 없는 글입니다.');
+}
+---
+
+<Base title={`${note.title} — Astro 실습`}>
+  <p><a href="/posts">목록</a></p>
+  <h1>{note.title}</h1>
+  <p>{note.summary}</p>
+  <p>이 주소의 동적 값은 <code>{Astro.params.slug}</code>입니다.</p>
+</Base>
