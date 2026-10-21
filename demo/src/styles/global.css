@@ -102,6 +102,20 @@ code {
   margin: 0.25rem 0 0;
 }
 
+.island-button {
+  font: inherit;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: white;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.below-fold {
+  margin-top: 80vh;
+}
+
 .site-footer {
   width: min(720px, calc(100% - 2rem));
   margin: 0 auto;

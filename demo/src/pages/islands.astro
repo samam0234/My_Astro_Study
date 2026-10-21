@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import ReactCounter from 'island-react/Counter.jsx';
+import VueCounter from 'island-vue/Counter.vue';
+import SvelteCounter from 'island-svelte/Counter.svelte';
+---
+
+<Base title="섬 — Astro 실습">
+  <h1>세 개의 섬</h1>
+  <p class="lede">
+    소스는 <code>react/demo</code>, <code>vue/demo</code>, <code>svelte/demo</code>에 있고, 이 페이지가 불러 씁니다.
+  </p>
+
+  <h2>지시어 없음</h2>
+  <p>아래 버튼은 HTML만 남습니다. 클릭해도 숫자가 늘지 않습니다.</p>
+  <ReactCounter label="React HTML만" />
+
+  <h2>client:load</h2>
+  <ReactCounter client:load label="React" />
+
+  <h2>client:idle</h2>
+  <SvelteCounter client:idle label="Svelte" />
+
+  <div class="below-fold">
+    <h2>client:visible</h2>
+    <p>이 제목은 화면 아래에 있습니다. 스크롤해서 보이면 Vue 섬이 깨어납니다.</p>
+    <VueCounter client:visible label="Vue" />
+  </div>
+</Base>
