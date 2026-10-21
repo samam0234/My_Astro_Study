@@ -1,0 +1,41 @@
+---
+export const prerender = false;
+
+import Base from '../layouts/Base.astro';
+import { readEntries } from '../lib/guestbook.js';
+
+const entries = await readEntries();
+---
+
+<Base title="방명록 — Astro 실습">
+  <h1>방명록</h1>
+  <p class="lede">
+    이 페이지만 요청마다 렌더합니다. 글 목록은 계속 정적 HTML입니다.
+    폼은 JavaScript 없이 <code>POST /api/guestbook</code>으로 갑니다.
+  </p>
+  <form method="post" action="/api/guestbook" class="guest-form">
+    <label>
+      이름
+      <input name="name" required maxlength="40" />
+    </label>
+    <label>
+      내용
+      <textarea name="message" required maxlength="280" rows="3"></textarea>
+    </label>
+    <button type="submit">남기기</button>
+  </form>
+  {
+    entries.length === 0 ? (
+      <p>아직 남긴 글이 없습니다.</p>
+    ) : (
+      <ul class="note-list">
+        {entries.map((entry) => (
+          <li>
+            <strong>{entry.name}</strong>
+            <p>{entry.message}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Base>
