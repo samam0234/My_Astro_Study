@@ -1,13 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
+import Mark from '../assets/mark.svg';
+
+const siteName = import.meta.env.PUBLIC_SITE_NAME || 'Astro 실습';
 ---
 
-<Base title="Astro 실습 — 첫 화면">
-  <p>study1</p>
+<Base title={`${siteName} — 첫 화면`} description="정적 페이지가 기본인 Astro 실습입니다.">
+  <Mark class="mark" width="48" height="48" aria-hidden="true" />
   <h1>정적 HTML이 먼저 도착합니다</h1>
   <p class="lede">
-    이 페이지는 <code>.astro</code> 앞부분과 템플릿만으로 만들어졌습니다.
-    React, Vue, Svelte 런타임은 아직 붙어 있지 않습니다.
+    본문은 빌드 때 HTML입니다. 화면 전환용 <code>ClientRouter</code>만 공통으로 붙어 있습니다.
+    React, Vue, Svelte는 <a href="/islands">섬</a> 페이지에만 있습니다.
   </p>
+  <p>사이트 이름: {siteName}</p>
   <p>생성기: {Astro.generator}</p>
 </Base>

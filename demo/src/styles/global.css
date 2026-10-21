@@ -47,6 +47,11 @@ main {
   padding: 2.5rem 0 4rem;
 }
 
+.mark {
+  display: block;
+  margin-bottom: 1rem;
+}
+
 h1 {
   font-size: 2rem;
   line-height: 1.25;

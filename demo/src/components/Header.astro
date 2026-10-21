@@ -1,4 +1,5 @@
 ---
+const siteName = import.meta.env.PUBLIC_SITE_NAME || 'Astro 실습';
 const links = [
   { href: '/', label: '홈' },
   { href: '/about', label: '소개' },
@@ -12,8 +13,8 @@ const links = [
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
-<header class="site-header">
-  <a href="/">Astro 실습</a>
+<header class="site-header" transition:persist>
+  <a href="/">{siteName}</a>
   <nav>
     {
       links.map((link) => (
