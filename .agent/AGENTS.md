@@ -52,9 +52,12 @@
 
 ## 7. 현재 진행 현황
 
-- 학습 문서와 실습 코드 작성 전입니다.
-- `node_modules`, `.astro`, `dist`, `.env`, `data/guestbook.json`은 커밋하지 않습니다.
+- `study0.md`부터 `studyFinal.md`까지 문서와 코드를 작성했고, 진도마다 커밋했다.
+- `demo/`는 study1~study10 (http://127.0.0.1:4321), `project/`는 메모 데스크 (http://127.0.0.1:4322)이다.
+- 확인은 `astro build`와 HTTP 응답으로 했다. 검색창 입력, 테마 버튼, 고정 버튼 클릭은 브라우저에서 누르지 않았다.
+- `node_modules`, `.astro`, `dist`, `.env`, `data/guestbook.json`은 커밋하지 않는다.
+- Docker 파일은 있다. 이미지를 만들 때 Docker Desktop 엔진이 꺼져 있어서 이미지 빌드는 하지 않았다. 같은 산출물은 `npm start`로 확인했다.
 
 ### 다음 단계 후보
 
-- `study0.md`부터 이론을 적고, `demo/`를 `npm create astro`로 만듭니다.
+- Docker Desktop이 켜진 뒤 `demo/`와 `project/` 이미지를 빌드해 본다.
