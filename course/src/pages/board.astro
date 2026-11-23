@@ -1,0 +1,63 @@
+---
+import Desk from '../layouts/Desk.astro';
+---
+<Desk title="게시판">
+  <h1>학습 게시판</h1>
+  <form id="search"><label>검색 <input name="q" type="search" /></label><button>찾기</button></form>
+  <p id="message" role="status" aria-live="polite"></p>
+  <section id="posts" aria-label="글 목록"></section>
+  <div class="actions"><button id="prev" type="button">이전</button><span id="page"></span><button id="next" type="button">다음</button></div>
+  <h2>글 작성·수정</h2><p>글과 댓글 작성에는 <a href="/auth">로그인</a>이 필요합니다.</p>
+  <form id="editor">
+    <label>수정할 글 ID (비우면 등록)<input name="id" inputmode="numeric" /></label>
+    <label>제목<input name="title" required maxlength="200" /></label>
+    <label>본문<textarea name="body" required maxlength="20000"></textarea></label>
+    <label>태그 (쉼표 구분)<input name="tags" /></label><button>저장</button>
+  </form>
+  <h2>댓글</h2>
+  <form id="comment-form"><label>글 ID<input name="postId" required inputmode="numeric" /></label>
+    <label>댓글<textarea name="body" maxlength="2000" required></textarea></label>
+    <button>댓글 작성</button><button id="load-comments" type="button">댓글 조회</button>
+  </form><section id="comments" aria-label="댓글 목록"></section>
+</Desk>
+<script>
+  import { api, formAction, show } from '../client/api.mjs';
+  const params = new URLSearchParams(location.search);
+  let page = Number(params.get('page')) || 1, totalPages = 0;
+  const search = document.querySelector<HTMLFormElement>('#search')!;
+  (search.elements.namedItem('q') as HTMLInputElement).value = params.get('q') || '';
+  async function load() {
+    params.set('page', String(page)); params.set('limit', '5'); history.replaceState(null, '', `?${params}`);
+    const result = await api(`/api/posts?${params}`); totalPages = result.meta.totalPages;
+    const target = document.querySelector('#posts')!; target.replaceChildren();
+    for (const post of result.data) {
+      const article = document.createElement('article'), title = document.createElement('h2'), text = document.createElement('pre'), meta = document.createElement('p');
+      title.textContent = `${post.id}. ${post.title}`; text.textContent = post.body; meta.textContent = `${post.author.nickname} · 댓글 ${post.commentCount}`;
+      const edit = document.createElement('button'); edit.type = 'button'; edit.textContent = '편집';
+      edit.onclick = () => { const f = document.querySelector<HTMLFormElement>('#editor')!; for (const key of ['id', 'title', 'body', 'tags']) (f.elements.namedItem(key) as HTMLInputElement).value = key === 'tags' ? post.tags.join(',') : String(post[key]); };
+      const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = '삭제';
+      remove.onclick = async () => { if (!confirm('이 글을 삭제할까요?')) return; try { await api(`/api/posts/${post.id}`, { method: 'DELETE' }); await load(); } catch (e) { show(e); } };
+      article.append(title, text, meta, edit, remove); target.append(article);
+    }
+    document.querySelector('#page')!.textContent = `${page} / ${Math.max(1, totalPages)}`;
+    (document.querySelector('#prev') as HTMLButtonElement).disabled = page <= 1;
+    (document.querySelector('#next') as HTMLButtonElement).disabled = page >= totalPages;
+  }
+  search.onsubmit = e => { e.preventDefault(); params.set('q', String(new FormData(search).get('q') || '')); page = 1; load().catch(show); };
+  document.querySelector('#prev')!.addEventListener('click', () => { page = Math.max(1, page - 1); load().catch(show); });
+  document.querySelector('#next')!.addEventListener('click', () => { page++; load().catch(show); });
+  formAction('#editor', async values => {
+    const id = values.id.trim(), payload = { title: values.title, body: values.body, tags: values.tags.split(',').map(t => t.trim()).filter(Boolean) };
+    const { data } = await api(id ? `/api/posts/${id}` : '/api/posts', { method: id ? 'PATCH' : 'POST', body: JSON.stringify(payload) });
+    show(`저장 완료: ${data.id}`); await load();
+  });
+  async function comments() {
+    const f = document.querySelector<HTMLFormElement>('#comment-form')!, id = new FormData(f).get('postId');
+    const { data } = await api(`/api/posts/${id}/comments`), target = document.querySelector('#comments')!; target.replaceChildren();
+    for (const c of data) { const p = document.createElement('p'), b = document.createElement('button'); p.textContent = `${c.author.nickname}: ${c.body} `; b.textContent = '댓글 삭제'; b.type = 'button';
+      b.onclick = async () => { try { await api(`/api/comments/${c.id}`, { method: 'DELETE' }); await comments(); await load(); } catch (e) { show(e); } }; p.append(b); target.append(p); }
+  }
+  formAction('#comment-form', async values => { await api(`/api/posts/${values.postId}/comments`, { method: 'POST', body: JSON.stringify({ body: values.body }) }); await comments(); await load(); show('댓글을 저장했습니다.'); });
+  document.querySelector('#load-comments')!.addEventListener('click', () => comments().catch(show));
+  load().catch(show);
+</script>
