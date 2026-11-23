@@ -1,0 +1,10 @@
+---
+import { getCollection, render } from 'astro:content';
+import Desk from '../../layouts/Desk.astro';
+export async function getStaticPaths() {
+  return (await getCollection('notes')).map(note => ({ params: { id: note.id }, props: { note } }));
+}
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+<Desk title={note.data.title}><Content /></Desk>
