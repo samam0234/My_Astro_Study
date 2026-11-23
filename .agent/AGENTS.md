@@ -1,63 +1,32 @@
-# 에이전트 공통 가이드라인 (인수인계 문서)
+# Astro 학습 저장소 인수인계
 
-이 문서는 이 저장소에서 작업하는 모든 AI 에이전트(Claude, Grok, Codex 등)가 **공통으로** 지켜야 할 규칙을 정리한 인수인계 문서입니다.
-`.claude/`, `.grok/`, `.codex/` 폴더의 에이전트별 문서는 이 문서를 기본으로 삼고, 도구별 특이사항만 추가로 기술합니다.
+## 범위와 기준
 
-## 1. 저장소 개요
+- 기준은 [Notion Astro](https://app.notion.com/p/3fdd7dec5e2e8136a3d7e7023440d36f)와 사용자의 최신 요청이다.
+- 현재 과정은 Astro 하나만 다룬다. 다른 화면/서버 프레임워크 비교·통합을 추가하지 않는다.
+- 순서는 study0~10 → studyMidpoint → study11~18 → studyFinal, 루트 학습 파일은 모두 study 접두사다.
+- 앱은 `course/`, 로컬 주소는 http://127.0.0.1:4323 이다. `demo/`, `project/`, 기존 섬 폴더는 이전 이력이다.
+- 기본 출력은 static이며 요청 시 API는 prerender=false와 Node adapter standalone으로 실행한다.
 
-- Astro 학습 기록 저장소입니다. 순서는 이론 → 기초 실습 → 고급 기술 → 응용 프로젝트입니다.
-- 학습 목표의 기준은 Notion 페이지 [Astro](https://app.notion.com/p/3fdd7dec5e2e8136a3d7e7023440d36f)입니다. 콘텐츠가 기본이고, 필요한 화면만 React / Vue / Svelte 섬으로 붙입니다.
-- 설명의 결은 [Ruby on Rails](https://app.notion.com/p/3fcd7dec5e2e816dba83e4c93c0a011c) 학습과 같습니다. 한 진도에 한 가지를 코드로 확인하고, 검증 결과를 문서에 남깁니다. Rails의 MVC·스캐폴드·ORM을 Astro에 그대로 옮기지는 않습니다.
-- 루트의 학습 문서는 `study0.md` ~ `study10.md`, `studyFinal.md` 순서로 진행됩니다.
-  - `study0.md`: Astro 기초 이론
-  - `study1.md`: 프로젝트 생성 방법 및 명령어, 실습1
-  - `study2.md` ~ `study5.md`: 실습2 ~ 실습5
-  - `study6.md` ~ `study10.md`: 고급 기술 구현 1 ~ 5
-  - `studyFinal.md`: 지금까지 배운 것을 응용한 작은 웹사이트
-- Astro 앱이 페이지, 콘텐츠, 엔드포인트를 담당합니다.
-  - `demo/`: study1~study10. 한 단계씩 쌓이는 Astro 앱입니다. 주소는 http://127.0.0.1:4321
-  - `project/`: `studyFinal.md`의 작은 웹사이트입니다. 주소는 http://127.0.0.1:4322
-- React, Vue, Svelte는 각자 폴더에서만 작업합니다. Astro 페이지를 수정하지 않고 섬 컴포넌트만 고칩니다.
-  - `react/demo`, `vue/demo`, `svelte/demo`: demo가 불러 쓰는 섬
-  - `react/project`, `vue/project`, `svelte/project`: project가 불러 쓰는 섬
+## 작업 규칙
 
-## 2. 작업 전 확인 사항
+- 작업 전 README·해당 진도 문서·요구사항 매핑을 읽고 코드와 문서의 연결을 확인한다.
+- 각 문서는 목표·이론·전체 코드/줄별 설명·연동·오류·연습·체크·다음 단계의 8개 구성을 유지한다.
+- 소스 변경 뒤 `python scripts/build_docs.py`로 코드 블록을 갱신하고 `python scripts/check_docs.py`로 확인한다. 해설 변경은 generator의 해당 진도에 함께 반영한다.
+- 노션 추가 체크 원문 3개는 study6·10·11에서 문구를 바꾸지 않는다. 충돌·미검증은 docs/requirements.md에 명시한다.
+- 문서·커밋 설명은 한국어, 코드·식별자·파일명과 커밋 타입은 영어다.
+- 커밋은 [COMMIT_GUIDE.md](COMMIT_GUIDE.md)에 따라 진도 순서·진도별로 나눈다.
+- .env·DB·업로드·로그·node_modules·dist·.astro·브라우저 테스트 산출물은 커밋하지 않는다.
+- 사용자 지시대로 코드와 md 작업·검증을 끝낸 다음 지정 노션을 갱신한다.
 
-- 새 작업을 시작하기 전에 `studyN.md` 파일들을 번호 순서대로 확인하여 지금까지의 학습 진도와 맥락을 파악합니다.
-- 실습 코드가 study 문서 설명과 어긋나지 않는지 확인합니다. study1~10은 `demo/`와, 섬이 있는 진도는 `react/demo`·`vue/demo`·`svelte/demo`입니다. studyFinal은 `project/`와 `react/project`·`vue/project`·`svelte/project`입니다.
-- 새 studyN.md 문서를 추가/수정할 때는 이전 study 문서와 이어지는 흐름을 유지합니다.
-- 기본 출력은 정적입니다. 요청마다 렌더하는 페이지에만 `export const prerender = false`를 둡니다. 어댑터는 `@astrojs/node` standalone입니다.
-- 세 프론트 폴더는 **같은 호스트 페이지 안에서 서로 다른 섬**입니다. 한 프레임워크 파일을 고칠 때 다른 프레임워크 파일을 같이 고치지 않습니다.
+## 검증과 현재 상태
 
-## 3. 커밋 규칙
+- Node 24.14.0·Astro 7.4.13 기준이다.
+- `course/`에서 npm test·build·test:http·test:extensions·MCP client·Playwright로 검증한다.
+- 단위 11개·HTTP 34개·브라우저 2개, worker/SSE/WebSocket·백업 복구·midpoint 제한·MCP 호출을 확인했다.
+- Docker 엔진과 외부 DB·실제 제공자 계정·호스팅은 별도 환경 검증 대상이다. mock 통과를 live 성공으로 적지 않는다.
+- 구현 제약과 실행 증거는 docs/requirements.md, docs/verification.md를 기준으로 이어간다.
 
-- 커밋 관련 규칙은 [COMMIT_GUIDE.md](./COMMIT_GUIDE.md) 문서를 따릅니다.
+## 다음 작업 후보
 
-## 4. 언어 규칙
-
-- 문서 내용, 커밋 설명: 한글
-- 커밋 타입(prefix), 코드, 식별자, 파일명: 영어
-
-## 5. 에이전트별 문서
-
-- Claude: [.claude/CLAUDE.md](../.claude/CLAUDE.md)
-- Grok: [.grok/GROK.md](../.grok/GROK.md)
-- Codex: [.codex/AGENTS.md](../.codex/AGENTS.md)
-
-## 6. 인수인계 원칙
-
-- 작업을 마칠 때는 다음 에이전트/세션이 이어받을 수 있도록 변경 내용과 다음 단계 후보를 간단히 남깁니다.
-- 불확실한 결정은 추측하지 말고 study 문서 내용을 근거로 삼습니다.
-- 이 문서나 커밋 가이드에 없는 새로운 컨벤션이 필요해지면, 추측해서 각자 다르게 처리하지 말고 이 문서를 먼저 갱신합니다.
-
-## 7. 현재 진행 현황
-
-- `study0.md`부터 `studyFinal.md`까지 문서와 코드를 작성했고, 진도마다 커밋했다.
-- `demo/`는 study1~study10 (http://127.0.0.1:4321), `project/`는 메모 데스크 (http://127.0.0.1:4322)이다.
-- 확인은 `astro build`와 HTTP 응답으로 했다. 검색창 입력, 테마 버튼, 고정 버튼 클릭은 브라우저에서 누르지 않았다.
-- `node_modules`, `.astro`, `dist`, `.env`, `data/guestbook.json`은 커밋하지 않는다.
-- Docker 파일은 있다. 이미지를 만들 때 Docker Desktop 엔진이 꺼져 있어서 이미지 빌드는 하지 않았다. 같은 산출물은 `npm start`로 확인했다.
-
-### 다음 단계 후보
-
-- Docker Desktop이 켜진 뒤 `demo/`와 `project/` 이미지를 빌드해 본다.
+Docker 실행 환경·외부 DB 3종·제공자 테스트 계정·호스팅에서 남은 검증을 수행한다. 고부하 운영 전 JSON 저장 모델을 조건 쿼리·정규화·트랜잭션으로 개선하고 캐시·worker의 다중 프로세스 정책을 마련한다.

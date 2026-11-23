@@ -7,8 +7,8 @@ study 문서 기반 학습 진행 내용을 커밋할 때 지켜야 할 규칙�
 1. `study0.md`, `study1.md`, `study2.md`, ... 번호 순서대로 문서를 확인합니다.
 2. 각 문서 안에서도 위에서 아래(섹션 순서)대로 진행 상황을 파악합니다.
 3. 문서 내용에 대응하는 실습 코드 변경 사항을 진도와 매칭합니다.
-   - study1~10: `demo/`. 섬이 있으면 `react/demo`, `vue/demo`, `svelte/demo`도 같은 진도입니다.
-   - studyFinal: `project/`, `react/project`, `vue/project`, `svelte/project`.
+   - 현재 과정: `study0~10`, `studyMidpoint`, `study11~18`, `studyFinal`과 `course/`의 대응 코드입니다.
+   - 기존 `demo/`, `project/` 및 외부 섬 폴더는 이전 이력이며 현재 과정의 작업 대상이 아닙니다.
 
 ## 2. 커밋 단위 (진도 파트별 분리)
 
