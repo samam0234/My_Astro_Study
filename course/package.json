@@ -1,0 +1,41 @@
+{
+  "name": "astro-study-desk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.14.0"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env ./node_modules/astro/bin/astro.mjs dev",
+    "build": "node --env-file-if-exists=.env ./node_modules/astro/bin/astro.mjs build",
+    "start": "node --env-file-if-exists=.env dist/server/entry.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:http": "node scripts/smoke.mjs",
+    "test:extensions": "node scripts/extensions.mjs",
+    "test:db": "node --env-file-if-exists=.env scripts/db-contract.mjs",
+    "worker": "node --env-file-if-exists=.env scripts/worker.mjs",
+    "backup": "node --env-file-if-exists=.env scripts/backup.mjs",
+    "mcp:server": "node --env-file-if-exists=.env scripts/mcp-server.mjs",
+    "mcp:client": "node scripts/mcp-client.mjs",
+    "measure": "node --env-file-if-exists=.env scripts/measure.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "8.1.0",
+    "@astrojs/node": "11.1.14",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "@picocss/pico": "^2.1.1",
+    "astro": "7.4.13",
+    "drizzle-orm": "0.45.4",
+    "mongodb": "^6.20.0",
+    "mysql2": "^3.15.3",
+    "nanostores": "^1.1.1",
+    "pg": "^8.16.3",
+    "stripe": "^20.0.0",
+    "ws": "^8.23.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
+}

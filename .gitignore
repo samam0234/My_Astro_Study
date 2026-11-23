@@ -12,6 +12,10 @@
 
 # runtime data
 **/data/guestbook.json
+course/data/
+course/test-results/
+course/playwright-report/
+**/__pycache__/
 
 # logs
 **/npm-debug.log*
