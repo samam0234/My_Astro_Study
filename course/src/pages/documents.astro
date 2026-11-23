@@ -1,0 +1,51 @@
+---
+import Desk from '../layouts/Desk.astro';
+---
+<Desk title="문서 도우미">
+  <h1>문서 도우미</h1><p>TXT·MD 내용을 저장하고 근거가 있는 발췌로 요약·질문을 연습합니다.</p>
+  <p id="message" role="status" aria-live="polite"></p><p>내 문서 <strong id="count">0</strong>개</p>
+  <form id="upload"><label>파일<input id="file" type="file" accept=".txt,.md,text/plain,text/markdown" /></label>
+    <label>파일 이름<input name="name" value="note.txt" required /></label>
+    <label>내용<textarea name="text" required></textarea></label><button>문서 저장</button></form>
+  <section id="documents" aria-label="내 문서 목록"></section>
+  <form id="ask"><label>문서 ID<input name="documentId" required inputmode="numeric" /></label>
+    <label>질문 (비우면 요약)<input name="question" maxlength="500" /></label><button>생성</button><button type="button" id="cancel">중단</button></form>
+  <pre id="answer" aria-live="polite"></pre>
+</Desk>
+<script>
+  import { api, formAction, show } from '../client/api.mjs';
+  import { documentCount } from '../client/state.mjs';
+  let abort: AbortController | undefined;
+  documentCount.subscribe(n => { document.querySelector('#count')!.textContent = String(n); });
+  document.querySelector('#file')!.addEventListener('change', async event => {
+    const file = (event.target as HTMLInputElement).files?.[0]; if (!file) return;
+    if (file.size > 100000) { show('파일은 100000바이트까지 가능합니다.'); return; }
+    const form = document.querySelector<HTMLFormElement>('#upload')!;
+    (form.elements.namedItem('name') as HTMLInputElement).value = file.name;
+    (form.elements.namedItem('text') as HTMLTextAreaElement).value = await file.text();
+  });
+  async function load() {
+    const { data } = await api('/api/documents'); documentCount.set(data.length);
+    const target = document.querySelector('#documents')!; target.replaceChildren();
+    for (const d of data) { const p = document.createElement('p'), a = document.createElement('a'); a.textContent = `${d.id}. ${d.name}`; a.href = `/api/documents/${d.id}/download`; p.append(a); target.append(p); }
+  }
+  formAction('#upload', async values => { const { data } = await api('/api/documents', { method: 'POST', body: JSON.stringify(values) });
+    (document.querySelector('[name=documentId]') as HTMLInputElement).value = String(data.id); show('문서를 저장했습니다.'); await load(); });
+  formAction('#ask', async values => {
+    abort = new AbortController(); const output = document.querySelector('#answer')!; output.textContent = '';
+    const response = await fetch('/api/ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: abort.signal,
+      body: JSON.stringify({ documentId: Number(values.documentId), question: values.question }) });
+    if (!response.ok) throw new Error((await response.json()).error.message);
+    const reader = response.body!.getReader(), decoder = new TextDecoder(); let buffer = '';
+    try {
+      for (;;) { const { value, done } = await reader.read(); buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
+        let newline; while ((newline = buffer.indexOf('\n')) >= 0) { const line = buffer.slice(0, newline); buffer = buffer.slice(newline + 1); if (!line) continue;
+          const item = JSON.parse(line); if (item.error) throw new Error(item.error); output.textContent += item.delta; }
+        if (done) break;
+      }
+      show('생성이 끝났습니다.');
+    } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
+  });
+  document.querySelector('#cancel')!.addEventListener('click', () => abort?.abort());
+  load().catch(show);
+</script>
