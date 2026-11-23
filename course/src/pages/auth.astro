@@ -1,0 +1,23 @@
+---
+import Desk from '../layouts/Desk.astro';
+---
+<Desk title="계정">
+  <h1>계정</h1><p id="message" role="status" aria-live="polite"></p>
+  <form id="signup"><h2>회원가입</h2>
+    <label>이메일<input name="email" type="email" required autocomplete="email" /></label>
+    <label>비밀번호<input name="password" type="password" minlength="10" maxlength="128" required autocomplete="new-password" /></label>
+    <label>별명<input name="nickname" maxlength="40" required /></label><button>가입</button>
+  </form>
+  <form id="login"><h2>로그인</h2>
+    <label>이메일<input name="email" type="email" required autocomplete="username" /></label>
+    <label>비밀번호<input name="password" type="password" minlength="10" maxlength="128" required autocomplete="current-password" /></label><button>로그인</button>
+  </form>
+  <div class="actions"><button id="me" type="button">내 정보</button><button id="logout" type="button">로그아웃</button><a href="/api/oauth/start">GitHub 로그인 (설정 후)</a></div>
+</Desk>
+<script>
+  import { api, formAction, show } from '../client/api.mjs';
+  formAction('#signup', async values => { await api('/api/auth/signup', { method: 'POST', body: JSON.stringify(values) }); show('가입했습니다. 로그인하세요.'); });
+  formAction('#login', async values => { const { data } = await api('/api/auth/login', { method: 'POST', body: JSON.stringify(values) }); show(`${data.user.nickname}님 로그인했습니다.`); });
+  document.querySelector('#me')!.addEventListener('click', async () => { try { show(JSON.stringify((await api('/api/auth/me')).data)); } catch (e) { show(e); } });
+  document.querySelector('#logout')!.addEventListener('click', async () => { try { await api('/api/auth/logout', { method: 'POST', body: '{}' }); show('로그아웃했습니다.'); } catch (e) { show(e); } });
+</script>
