@@ -1,0 +1,13 @@
+---
+import Desk from '../layouts/Desk.astro';
+import NoteCard from '../components/NoteCard.astro';
+import Draft from '../components/Draft.astro';
+const items = [{ title: '첫 글', href: '/notes/welcome', body: 'props로 데이터를 보냅니다.' }];
+---
+<Desk title="기초 실습">
+  <h1>컴포넌트와 데이터</h1>
+  {items.map(item => <NoteCard title={item.title} href={item.href}>
+    <small slot="meta">콘텐츠 컬렉션으로 연결</small><p>{item.body}</p>
+  </NoteCard>)}
+  <Draft />
+</Desk>
