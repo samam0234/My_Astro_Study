@@ -1,0 +1,12 @@
+<label>로컬 메모 <textarea id="draft" placeholder="이 브라우저에만 저장합니다."></textarea></label>
+<p id="draft-status" role="status"></p>
+<script>
+  const input = document.querySelector<HTMLTextAreaElement>('#draft')!;
+  const status = document.querySelector('#draft-status')!;
+  try { input.value = localStorage.getItem('astro-draft') || ''; }
+  catch { status.textContent = '브라우저 저장소를 사용할 수 없습니다.'; }
+  input.addEventListener('input', () => {
+    try { localStorage.setItem('astro-draft', input.value); status.textContent = '이 브라우저에 저장했습니다.'; }
+    catch { status.textContent = '저장 공간 또는 권한을 확인하세요.'; }
+  });
+</script>
