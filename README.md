@@ -1,96 +1,72 @@
-# Astro 학습 저장소
+# Astro 학습 데스크
 
-콘텐츠가 기본인 Astro를 이론부터 작은 웹사이트까지 단계별로 실습한 기록입니다.
-정적인 HTML을 먼저 만들고, 클릭이나 입력이 필요한 자리만 React, Vue, Svelte 섬으로 붙입니다.
+[Notion Astro](https://app.notion.com/p/3fdd7dec5e2e8136a3d7e7023440d36f)를 기준으로 **Astro 하나**를 학습하는 21개 문서와 실행 코드입니다. 기존 study0~10·studyFinal은 갱신했고 study11~18·studyMidpoint를 추가했습니다.
 
-학습 목표의 기준은 [Notion: Astro](https://app.notion.com/p/3fdd7dec5e2e8136a3d7e7023440d36f)입니다.
-설명은 한 진도에 한 가지를 코드로 확인하고, 확인한 결과를 `studyN.md`에 남기는 방식입니다.
+현재 학습 앱은 **`course/`**, 주소는 **http://127.0.0.1:4323**입니다. Astro 템플릿·브라우저 스크립트와 Node adapter를 사용하며 다른 화면/서버 프레임워크를 호출하지 않습니다.
 
-- `demo/`는 study1부터 study10까지 한 단계씩 쌓인 실습 앱입니다. 주소는 http://127.0.0.1:4321
-- `project/`는 `studyFinal.md`의 메모 데스크입니다. 게시판·방명록이 없고, 폴더와 주소도 `demo/`와 다릅니다. 주소는 http://127.0.0.1:4322
-- 섬 소스는 Astro 앱 밖에 둡니다. `react/`, `vue/`, `svelte/` 안에서 각자 고칩니다.
-  - `*/demo`는 `demo/`가 불러 씁니다.
-  - `*/project`는 `project/`가 불러 씁니다.
+## 실행
 
-## 사전 준비
+Node 24.14.0 이상과 npm을 준비합니다. 잠금 파일 기준 Astro 7.4.13, Node adapter 11.1.14입니다.
 
 ```powershell
-node -v   # v22.22 이상. 이 실습은 v24.14.0
-npm -v    # 11.x
+cd course
+npm ci
+Copy-Item .env.example .env
+npm run dev
 ```
 
-## 기술 스택
+기존 `.env`가 있으면 필요한 설정만 편집합니다. 기본 DB는 `course/data/desk.sqlite`, 외부 서비스와 AI는 mock입니다. `/auth`에서 가입·로그인하고 `/board`에서 글·댓글을 관리합니다. `/documents`는 개인 TXT·MD 문서 저장·요약·질문, `/services`는 메일 작업·테스트 결제·알림입니다. `/api-docs`와 `/openapi.json`은 API 문서입니다.
 
-Astro 7, `@astrojs/node` standalone. 기본 출력은 정적입니다. 요청마다 렌더하는 페이지만 `export const prerender = false`입니다.
+배포 산출물은 `npm run build`, `npm start`로 확인합니다. 별도 터미널의 `npm run worker`로 메일 작업을 처리합니다. `npm run mcp:client`는 실제 SDK stdio 서버를 띄워 모의 요약 도구를 호출합니다. `COURSE_STAGE=midpoint`로 빌드·실행하면 기초 게시판 API만 열립니다.
 
-### demo/ (study1 ~ study10)
+## 문서 순서
 
-- 파일 라우트, Astro 컴포넌트, props와 slot
-- React `client:load`, Svelte `client:idle`, Vue `client:visible`
-- 콘텐츠 컬렉션과 MDX
-- 정적 GET `/api/posts.json`
-- 방명록 POST, 방문 쿠키 `/now`
-- `PUBLIC_SITE_NAME`, SVG, `ClientRouter`
-- `npm start`로 프로덕션 서버. Dockerfile은 있으나 이미지 빌드는 엔진이 꺼져 있어 하지 않음
+모든 문서는 목표·이론·전체 코드와 줄별 설명·연동·오류·직접 해보기·체크리스트·다음 단계의 8개 구성을 따릅니다.
 
-### project/ (studyFinal)
+| 문서 | 주제 |
+|---|---|
+| [study0](study0.md) | 환경·설치·버전·Git·환경변수 |
+| [study1](study1.md) | Hello World·문법·개발자도구 |
+| [study2](study2.md) | 컴포넌트·레이아웃·props·slot |
+| [study3](study3.md) | 서버 변수·브라우저 상태·localStorage |
+| [study4](study4.md) | 라우팅·동적 경로·컬렉션·MDX·404 |
+| [study5](study5.md) | 폼·검증·응답 코드·중복 제출 |
+| [study6](study6.md) | SQLite·공통 API v1·게시글/댓글 CRUD |
+| [study7](study7.md) | 가입·로그인·세션·권한·보안 |
+| [study8](study8.md) | 모듈·설정·개발/운영 분리 |
+| [study9](study9.md) | 단위·HTTP·브라우저·mock·오류 TOP 10 |
+| [study10](study10.md) | 빌드·Node 배포·HTTPS·기초 정리 |
+| [studyMidpoint](studyMidpoint.md) | 기초만으로 만드는 게시판 서비스 |
+| [study11](study11.md) | PostgreSQL·MariaDB·MongoDB·ORM |
+| [study12](study12.md) | UI CSS·상태·폼 라이브러리 |
+| [study13](study13.md) | 결제·메일·파일·OAuth |
+| [study14](study14.md) | REST·OpenAPI·버전·페이지·오류 |
+| [study15](study15.md) | 측정·캐시·배경 작업·재시도 |
+| [study16](study16.md) | Docker·Actions·배포·로그·백업 |
+| [study17](study17.md) | SSE·WebSocket·파일 다운로드 |
+| [study18](study18.md) | 문서 AI·근거 검색·스트리밍·MCP |
+| [studyFinal](studyFinal.md) | 심화 서비스·배포·보안·회고 |
 
-- 레이아웃은 `src/ui/Shell.astro`
-- 메모 콘텐츠 컬렉션, React 검색, Vue 고정 버튼, Svelte 테마
-- 방문 쿠키 `/visit`
-- 포트 4322
-
-## 프로젝트 실행
+## 검증
 
 ```powershell
-cd demo
-npm install
-npm run dev      # http://127.0.0.1:4321
+cd course
+npm test
 npm run build
-npm start        # dist/server/entry.mjs
+npm run test:http
+npx playwright install chromium
+npx playwright test
+npm run mcp:client
+cd ..
+python scripts/check_docs.py
 ```
 
-메모 데스크:
+학습자 체크는 비워 두고 실제 결과를 [검증 기록](docs/verification.md)에 적었습니다. 외부 DB·live 제공자·Docker 실행·호스팅 배포는 별도 환경 검증이 필요합니다.
 
-```powershell
-cd project
-npm install
-npm run dev      # http://127.0.0.1:4322
-npm run build
-npm start
-```
+## 원문 반영
 
-정적 HTML은 어댑터를 켠 뒤 `dist/client/`에 있습니다. `dist/` 바로 아래에는 없습니다.
+추가 체크 항목 **3개 모두**를 study6·10·11에 원문대로 넣었습니다. [요구사항 매핑](docs/requirements.md)에 반영 위치·제약을 적었습니다. 별도 백엔드와 다른 화면 프레임워크 섬 실습은 이번 단독 Astro 조건과 충돌해 실행하지 않았습니다.
 
-## 학습 문서 목차
+기존 `demo/`, `project/`, `react/`, `vue/`, `svelte/`는 이전 이력입니다. 새 `course/`의 의존성·별칭·엔드포인트는 이 폴더들에 의존하지 않습니다.
 
-| 문서 | 주제 | 핵심 내용 |
-|---|---|---|
-| [study0.md](study0.md) | Astro 기초 이론 | 콘텐츠 기본, Next·Rails와 차이, 섬과 정적 경계 |
-| [study1.md](study1.md) | 만드는 방법과 명령어, 실습 1 | `create-astro`, 첫 정적 페이지 |
-| [study2.md](study2.md) | 실습 2 | 파일 라우트, `getStaticPaths` |
-| [study3.md](study3.md) | 실습 3 | props, slot, 레이아웃 |
-| [study4.md](study4.md) | 실습 4 | React / Vue / Svelte 섬과 client 지시어 |
-| [study5.md](study5.md) | 실습 5 | 콘텐츠 컬렉션, MDX, 정적 글 목록 |
-| [study6.md](study6.md) | 고급 1 | 정적 GET `/api/posts.json` |
-| [study7.md](study7.md) | 고급 2 | Node 어댑터, 방명록 POST |
-| [study8.md](study8.md) | 고급 3 | 방문 쿠키, 정적과 온디맨드 경계 |
-| [study9.md](study9.md) | 고급 4 | 환경 변수, 이미지, 메타, ClientRouter |
-| [study10.md](study10.md) | 고급 5 | `npm start`, Dockerfile |
-| [studyFinal.md](studyFinal.md) | 종합 프로젝트 | 메모 데스크. demo와 다른 구조 |
-
-## 저장소 구조
-
-```text
-demo/                 study1~10 Astro 앱
-project/              studyFinal 메모 데스크
-react/demo            demo용 React 섬
-react/project         메모 검색
-vue/demo              demo용 Vue 섬
-vue/project           메모 고정 버튼
-svelte/demo           demo용 Svelte 섬
-svelte/project        테마 토글
-study0.md ~ studyFinal.md
-```
-
-`node_modules`, `.astro`, `dist`, `.env`, `demo/data/guestbook.json`은 커밋하지 않습니다. `.env.example`만 저장소에 있습니다.
+소스 변경 후 `python scripts/build_docs.py`로 코드 블록을 갱신합니다. `scripts/check_docs.py`는 21개 문서 구성·원문 체크·링크·코드 일치를 검사합니다.
