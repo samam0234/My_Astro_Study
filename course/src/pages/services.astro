@@ -1,0 +1,26 @@
+---
+import Desk from '../layouts/Desk.astro';
+---
+<Desk title="외부 서비스">
+  <h1>외부 서비스 연습</h1><p>기본 설정은 mock입니다. 실제 결제나 메일 발송은 발생하지 않습니다.</p>
+  <p id="message" role="status" aria-live="polite"></p>
+  <button id="mail" type="button">내 이메일로 알림 작업 등록</button>
+  <button id="checkout" type="button">테스트 결제 세션 만들기</button>
+  <button id="events" type="button">작업 알림 연결</button><pre id="jobs"></pre>
+</Desk>
+<script>
+  import { api, show } from '../client/api.mjs';
+  for (const [id, path] of [['mail', '/api/mail'], ['checkout', '/api/checkout']]) {
+    const button = document.getElementById(id) as HTMLButtonElement;
+    button.onclick = async () => { button.disabled = true; try { const { data } = await api(path, { method: 'POST', body: JSON.stringify({ key: crypto.randomUUID() }) });
+      show(JSON.stringify(data)); if (data.url) { const a = document.createElement('a'); a.textContent = '테스트 결제 화면 열기'; a.href = data.url; document.querySelector('#message')!.append(a); }
+    } catch (e) { show(e); } finally { button.disabled = false; } };
+  }
+  let events: EventSource | undefined;
+  document.getElementById('events')!.onclick = () => {
+    events?.close(); events = new EventSource('/api/events');
+    events.addEventListener('jobs', event => { document.getElementById('jobs')!.textContent = (event as MessageEvent).data; });
+    events.onerror = () => show('알림 연결을 확인하세요. 로그인 만료 시 다시 로그인하세요.');
+  };
+  window.addEventListener('pagehide', () => events?.close());
+</script>
