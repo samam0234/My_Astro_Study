@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: astro
+      POSTGRES_USER: astro
+      POSTGRES_PASSWORD: local-study-only
+    ports: ["127.0.0.1:5438:5432"]
+    volumes: ["pg-data:/var/lib/postgresql/data"]
+  mariadb:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: astro
+      MARIADB_USER: astro
+      MARIADB_PASSWORD: local-study-only
+      MARIADB_ROOT_PASSWORD: local-root-only
+    ports: ["127.0.0.1:3308:3306"]
+    volumes: ["maria-data:/var/lib/mysql"]
+  mongodb:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: astro
+      MONGO_INITDB_ROOT_PASSWORD: local-study-only
+    ports: ["127.0.0.1:27018:27017"]
+    volumes: ["mongo-data:/data/db"]
+volumes:
+  pg-data:
+  maria-data:
+  mongo-data:
