@@ -1,124 +1,77 @@
-# study1. 만드는 방법 및 명령어, 실습1
+# study1 · Hello World와 기본 문법
 
-[study0.md](study0.md)의 지도를 코드로 확인합니다. 이 단계의 결과물은 **정적 HTML 한 장**입니다. 섬, 글 목록, API는 아직 없습니다.
+## ① 목표 한 줄
 
-대응하는 코드:
+frontmatter와 템플릿 표현식으로 첫 정적 화면을 만든다.
 
-- Astro 앱: [`demo/`](demo)
-- 섬을 둘 빈 폴더: [`react/demo`](react/demo), [`vue/demo`](vue/demo), [`svelte/demo`](svelte/demo)
+기준: [Notion Astro](https://app.notion.com/p/3fdd7dec5e2e8136a3d7e7023440d36f). 실행 앱은 `course/` 하나다. 루트의 기존 study 문서를 이 과정으로 갱신했다.
 
-## 1. 개발 환경
+## ② 📖 이론
 
-```powershell
-node -v   # v24.14.0
-npm -v    # 11.9.0
-```
+`.astro`의 `---` 사이 JavaScript는 서버 또는 빌드에서 실행된다. 아래 HTML의 `{title}`은 그 값을 출력한다. 배열은 `map()`으로 반복하고, 조건은 `조건 && <태그>` 또는 삼항식으로 표현한다. `class` 속성은 HTML과 같이 쓴다. 변수는 브라우저 반응형 상태가 아니므로 클릭으로 값을 바꿀 때에는 별도 `<script>`가 필요하다.
 
-Astro 7.4는 `package.json`의 `engines`에 Node.js 22.22.0 이상을 적습니다. 이 저장소의 Node는 v24라서 그 조건을 만족합니다.
+템플릿은 편지 양식, frontmatter는 편지에 넣을 주소와 문구다. 값의 계산과 HTML의 표시 위치를 구분하면 서버 비밀값을 템플릿에 실수로 출력하는 일도 줄어든다. 기본 출력은 HTML이며 공통 CSS는 자바스크립트 상태 관리와 별개다.
 
-## 2. 프로젝트 생성 명령어
+## ③ 🛠️ 실기
 
-저장소 루트는 이미 Git입니다. 프로젝트 안에 또 `.git`이 생기지 않도록 `--no-git`을 붙입니다.
+`course/src/pages/index.astro` 전체를 아래 코드와 맞춘다. `npm run dev`로 홈을 연 뒤 제목을 바꿔 저장한다. 개발 서버에서 보이는 Vite 도구 스크립트와 배포 번들을 혼동하지 않는다. `npm run build` 후 `dist/client/index.html`을 열어 출력 문구를 찾는다. 원본 템플릿에 있는 표현식은 빌드 결과에서 실제 문자열로 바뀐다.
 
-```powershell
-npm create astro@latest -- demo --template minimal --install --no-git --yes --no-ai --skip-houston
-```
+### `course/src/pages/index.astro` 전체 코드
 
-| 옵션 | 의미 |
-|---|---|
-| `demo` | 만들 폴더 이름 |
-| `--template minimal` | 페이지 하나만 있는 빈 템플릿. 블로그 스타터를 쓰지 않음 |
-| `--install` | 생성 직후 `npm install` |
-| `--no-git` | 하위 `.git`을 만들지 않음 |
-| `--yes` | 나머지 질문을 기본값으로 |
-| `--no-ai` | 에이전트용 규칙 파일을 템플릿이 추가하지 않음 |
-| `--skip-houston` | 설치 애니메이션 생략 |
-
-사용한 도구 버전은 `create-astro` 5.3.0, 설치된 프레임워크는 Astro 7.4.1입니다.
-
-이미 이 저장소를 받은 사람은 생성 명령을 다시 실행하지 않습니다.
-
-```powershell
-cd demo
-npm install
-npm run dev
-```
-
-## 3. 자주 쓰는 명령어
-
-명령은 `demo/` 안에서 실행합니다.
-
-| 명령 | 하는 일 |
-|---|---|
-| `npm run dev` | 개발 서버. 저장하면 새로고침. http://127.0.0.1:4321 |
-| `npm run build` | 정적 사이트를 `dist/`에 생성 |
-| `npm run preview` | 빌드 결과를 로컬에서 다시 서빙. `build` 이후 |
-| `npm run astro -- --help` | Astro CLI 도움말 |
-
-`astro.config.mjs`에서 주소와 포트를 고정했습니다.
-
-```js
-export default defineConfig({
-  site: 'http://127.0.0.1:4321',
-  server: { host: '127.0.0.1', port: 4321 },
-});
-```
-
-## 4. 만들어진 구조
-
-```
-demo/
-├─ astro.config.mjs
-├─ package.json
-├─ tsconfig.json          ← astro/tsconfigs/strict. 콘텐츠 컬렉션 타입용
-├─ public/favicon.svg     ← 가공 없이 /favicon.svg
-└─ src/
-   ├─ layouts/Base.astro  ← html, head, 공통 CSS
-   ├─ pages/index.astro   ← URL /
-   └─ styles/global.css
-```
-
-`index.astro`는 레이아웃을 import해서 감쌉니다. Next처럼 폴더 레이아웃이 자동으로 붙지 않습니다.
+[index.astro](course/src/pages/index.astro)를 그대로 사용한다. 코드 블록의 줄 번호는 바로 아래 설명표와 일치한다.
 
 ```astro
 ---
-import Base from '../layouts/Base.astro';
+import Desk from '../layouts/Desk.astro';
+const title = import.meta.env.PUBLIC_SITE_NAME || 'Astro 학습 데스크';
+const topics = ['정적 HTML', '컴포넌트와 데이터', '게시판 API', '문서 요약'];
 ---
-<Base title="Astro 실습 — 첫 화면">
-  <h1>정적 HTML이 먼저 도착합니다</h1>
-</Base>
+<Desk title={title}>
+  <h1>{title}</h1>
+  <p>정적 랜딩 페이지에서 시작해 로그인·게시판·문서 도우미로 이어집니다.</p>
+  <ul>{topics.map((topic, index) => <li>{index + 1}. {topic}</li>)}</ul>
+  <p><a role="button" href="/board">게시판 열기</a></p>
+</Desk>
 ```
 
-`---` 위는 비어 있습니다. 이 페이지는 요청 데이터도, 데이터베이스도 읽지 않습니다.
+줄별 설명:
 
-## 5. React, Vue, Svelte 폴더
-
-세 폴더는 지금 README만 있습니다. 섬 컴포넌트는 study4에서 각자 폴더에 추가합니다. Astro 페이지는 `demo/src`만 수정하고, 프레임워크 파일은 해당 폴더 안에서만 수정합니다.
-
-| 폴더 | 나중에 들어가는 것 |
+| 줄 | 설명 |
 |---|---|
-| `react/demo` | `.jsx` 섬 |
-| `vue/demo` | `.vue` 섬 |
-| `svelte/demo` | `.svelte` 섬 |
+| 1 | 서버 frontmatter와 HTML 템플릿의 경계를 표시한다. |
+| 2 | `'../layouts/Desk.astro'`의 기능을 이 파일에서 사용한다. |
+| 3 | 실행/빌드 환경에서 설정을 읽어 기본값 또는 분기를 결정한다. |
+| 4 | 이 이름의 값·객체·함수를 선언해 아래 처리에서 사용한다: `const topics`. |
+| 5 | 서버 frontmatter와 HTML 템플릿의 경계를 표시한다. |
+| 6 | 이 HTML·컴포넌트·템플릿 표현식을 현재 위치에 출력한다. |
+| 7 | 이 HTML·컴포넌트·템플릿 표현식을 현재 위치에 출력한다. |
+| 8 | 이 HTML·컴포넌트·템플릿 표현식을 현재 위치에 출력한다. |
+| 9 | 목록의 각 항목을 화면 또는 응답에 필요한 모양으로 변환한다. |
+| 10 | 이 HTML·컴포넌트·템플릿 표현식을 현재 위치에 출력한다. |
+| 11 | 이 HTML·컴포넌트·템플릿 표현식을 현재 위치에 출력한다. |
 
-## 6. 검증 결과
+## ④ 🔗 연동 포인트
 
-개발 서버 `npm run dev` 응답:
+개발 서버의 파일 감시가 저장한 템플릿을 반영한다. 브라우저 개발자도구 Network에서 Document 응답, Elements에서 결과 DOM, Console에서 오류를 확인한다. 다음 단계에서 반복되는 화면을 컴포넌트로 분리한다.
 
-- `GET http://127.0.0.1:4321/` → 200
-- `<title>`은 `Astro 실습 — 첫 화면`
-- `<meta name="generator" content="Astro v7.4.1">`
-- 본문에 `정적 HTML이 먼저 도착합니다`
-- 개발 서버 HTML에는 Vite 클라이언트와 개발 툴바 `<script>`가 있습니다. 이건 개발용이고 빌드 결과에는 없습니다.
+## ⑤ 오류 노트
 
-`npm run build` 결과:
+| 증상 | 원인 | 해결 |
+|---|---|---|
+| 화면이 안 바뀜 | 빌드 서버만 실행 | 개발 중 dev 사용, 배포는 재빌드 |
+| 표현식 문법 오류 | 중괄호/태그 닫기 누락 | 터미널의 파일·줄 위치 확인 |
 
-- `output: "static"`, 페이지 1개, `dist/index.html`
-- `dist/index.html`에는 `<script`가 없습니다.
+## ⑥ 직접 해보기
 
-## 7. 이 단계에서 일부러 안 한 것
+1. 홈 제목과 배열 항목을 바꿔 자동 새로고침을 확인한다.
+2. 배열이 비었을 때 안내 문구가 보이는 조건부 출력을 만든다.
 
-- React, Vue, Svelte 통합 설치
-- 두 번째 페이지
-- 콘텐츠 컬렉션과 엔드포인트
-- Node 어댑터. 전부 정적이므로 서버 프로세스가 필요 없습니다.
+## ⑦ ☐ 체크리스트
+
+- [ ] frontmatter와 HTML을 구별했다.
+- [ ] `{표현식}`과 `map()`을 사용했다.
+- [ ] 개발자도구와 개발 서버 변경 반영을 확인했다.
+
+## ⑧ 다음 단계 연결 문장
+
+이 단계의 결과를 [study2.md](study2.md)에서 다음 기능과 연결한다. 학습자가 직접 확인할 체크는 의도적으로 비워 두며, 실제 실행 검증 결과는 [검증 기록](docs/verification.md)에 별도로 남긴다.

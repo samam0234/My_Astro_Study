@@ -1,0 +1,33 @@
+---
+import '@picocss/pico/css/pico.min.css';
+const { title = 'Astro 학습 데스크' } = Astro.props;
+const basic = import.meta.env.COURSE_STAGE === 'midpoint';
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Astro 하나로 만드는 학습 게시판과 문서 도우미" />
+    <title>{title}</title>
+    <style is:global>
+      main { max-width: 960px; } nav { flex-wrap: wrap; } textarea { min-height: 8rem; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 1rem; }
+      .muted { color: var(--pico-muted-color); } [role=status] { min-height: 1.5rem; }
+      .actions { display: flex; gap: .6rem; flex-wrap: wrap; } article h2 { font-size: 1.4rem; }
+    </style>
+  </head>
+  <body>
+    <header class="container"><nav aria-label="주 메뉴">
+      <ul><li><a href="/">Astro 데스크</a></li></ul>
+      <ul>
+        <li><a href="/lessons">기초</a></li><li><a href="/notes/welcome">콘텐츠</a></li>
+        <li><a href="/board">게시판</a></li><li><a href="/auth">계정</a></li>
+        {!basic && <><li><a href="/services">서비스</a></li><li><a href="/documents">문서 AI</a></li></>}
+        <li><a href="/api-docs">API</a></li>
+      </ul>
+    </nav></header>
+    <main class="container"><slot /></main>
+    <footer class="container"><small>정적 콘텐츠와 요청 시 실행되는 API를 Astro로 연결합니다.</small></footer>
+  </body>
+</html>

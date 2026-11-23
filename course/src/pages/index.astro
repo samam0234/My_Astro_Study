@@ -1,0 +1,11 @@
+---
+import Desk from '../layouts/Desk.astro';
+const title = import.meta.env.PUBLIC_SITE_NAME || 'Astro 학습 데스크';
+const topics = ['정적 HTML', '컴포넌트와 데이터', '게시판 API', '문서 요약'];
+---
+<Desk title={title}>
+  <h1>{title}</h1>
+  <p>정적 랜딩 페이지에서 시작해 로그인·게시판·문서 도우미로 이어집니다.</p>
+  <ul>{topics.map((topic, index) => <li>{index + 1}. {topic}</li>)}</ul>
+  <p><a role="button" href="/board">게시판 열기</a></p>
+</Desk>
