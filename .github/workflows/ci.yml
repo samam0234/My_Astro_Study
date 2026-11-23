@@ -1,0 +1,75 @@
+name: Astro 학습 검증과 이미지 배포
+on:
+  push:
+    branches: [master]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: course
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.14.0'
+          cache: npm
+          cache-dependency-path: course/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:http
+      - run: npm run test:extensions
+      - run: npm run mcp:client
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+      - run: python ../scripts/check_docs.py
+      - run: docker build -t astro-study-check .
+  publish:
+    needs: verify
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: image
+        env:
+          REPOSITORY: ${{ github.repository }}
+        run: echo "name=ghcr.io/${REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: course
+          push: true
+          tags: ${{ steps.image.outputs.name }}:${{ github.sha }}
+  deploy:
+    needs: publish
+    if: github.event_name == 'push' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - name: 배포 훅 호출과 HTTPS 상태 확인
+        env:
+          DEPLOY_HOOK: ${{ secrets.DEPLOY_HOOK }}
+          HEALTH_URL: ${{ vars.HEALTH_URL }}
+          DEPLOY_IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          REVISION: ${{ github.sha }}
+        run: |
+          test -n "$DEPLOY_HOOK" && test -n "$HEALTH_URL"
+          curl --fail --silent --show-error --json "{\"image\":\"${DEPLOY_IMAGE,,}\",\"revision\":\"$REVISION\"}" "$DEPLOY_HOOK"
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error --dump-header health-headers.txt --output health.json "$HEALTH_URL" && grep -Eiq "^x-release-sha: ${REVISION}[[:space:]]*$" health-headers.txt; then exit 0; fi
+            sleep 5
+          done
+          exit 1
